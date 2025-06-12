@@ -1,8 +1,10 @@
-package by.it.a_khmelev.lesson06;
+package by.it.group410971.lukashonok.lesson06;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 Задача на программирование: наибольшая невозростающая подпоследовательность
@@ -38,29 +40,55 @@ import java.util.Scanner;
 public class C_LongNotUpSubSeq {
 
     public static void main(String[] args) throws FileNotFoundException {
-        InputStream stream = B_LongDivComSubSeq.class.getResourceAsStream("dataC.txt");
+        InputStream stream = C_LongNotUpSubSeq.class.getResourceAsStream("dataC.txt");
         C_LongNotUpSubSeq instance = new C_LongNotUpSubSeq();
         int result = instance.getNotUpSeqSize(stream);
-        System.out.print(result);
+        System.out.println(result);
     }
 
     int getNotUpSeqSize(InputStream stream) throws FileNotFoundException {
-        //подготовка к чтению данных
         Scanner scanner = new Scanner(stream);
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        //общая длина последовательности
         int n = scanner.nextInt();
         int[] m = new int[n];
-        //читаем всю последовательность
         for (int i = 0; i < n; i++) {
             m[i] = scanner.nextInt();
         }
-        //тут реализуйте логику задачи методами динамического программирования (!!!)
-        int result = 0;
 
+        int[] dp = new int[n];
+        int[] prev = new int[n];
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+        int maxLen = 0;
+        int maxIndex = -1;
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            prev[i] = -1;
+            for (int j = 0; j < i; j++) {
+                if (m[j] >= m[i] && dp[j] + 1 > dp[i]) {
+                    dp[i] = dp[j] + 1;
+                    prev[i] = j;
+                }
+            }
+            if (dp[i] > maxLen) {
+                maxLen = dp[i];
+                maxIndex = i;
+            }
+        }
+
+        List<Integer> sequence = new ArrayList<>();
+        int current = maxIndex;
+        while (current != -1) {
+            sequence.add(current + 1);
+            current = prev[current];
+        }
+        java.util.Collections.reverse(sequence);
+
+        System.out.println(maxLen);
+        for (int index : sequence) {
+            System.out.print(index + " ");
+        }
+        System.out.println();
+
+        return maxLen;
     }
-
 }

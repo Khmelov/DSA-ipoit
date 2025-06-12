@@ -1,8 +1,9 @@
-package by.it.a_khmelev.lesson05;
+package by.it.group410971.lukashonok.lesson05;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.Arrays;
 
 /*
 Видеорегистраторы и площадь.
@@ -46,35 +47,75 @@ public class A_QSort {
     }
 
     int[] getAccessory(InputStream stream) throws FileNotFoundException {
-        //подготовка к чтению данных
         Scanner scanner = new Scanner(stream);
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        //число отрезков отсортированного массива
+
         int n = scanner.nextInt();
         Segment[] segments = new Segment[n];
-        //число точек
+
         int m = scanner.nextInt();
         int[] points = new int[m];
         int[] result = new int[m];
 
-        //читаем сами отрезки
         for (int i = 0; i < n; i++) {
-            //читаем начало и конец каждого отрезка
-            segments[i] = new Segment(scanner.nextInt(), scanner.nextInt());
+            int start = scanner.nextInt();
+            int stop = scanner.nextInt();
+            if (start > stop) {
+                int tmp = start;
+                start = stop;
+                stop = tmp;
+            }
+            segments[i] = new Segment(start, stop);
         }
-        //читаем точки
+
         for (int i = 0; i < m; i++) {
             points[i] = scanner.nextInt();
         }
-        //тут реализуйте логику задачи с применением быстрой сортировки
-        //в классе отрезка Segment реализуйте нужный для этой задачи компаратор
 
+        int[] starts = new int[n];
+        int[] ends = new int[n];
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
+        for (int i = 0; i < n; i++) {
+            starts[i] = segments[i].start;
+            ends[i] = segments[i].stop;
+        }
+
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+
+        for (int i = 0; i < m; i++) {
+            int point = points[i];
+            int countStarts = upperBound(starts, point);
+            int countEnds = lowerBound(ends, point);
+            result[i] = countStarts - countEnds;
+        }
+
         return result;
     }
 
-    //отрезок
+    private int upperBound(int[] arr, int key) {
+        int left = 0, right = arr.length;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (arr[mid] <= key)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return left;
+    }
+
+    private int lowerBound(int[] arr, int key) {
+        int left = 0, right = arr.length;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (arr[mid] < key)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return left;
+    }
+
     private class Segment implements Comparable<Segment> {
         int start;
         int stop;
@@ -82,16 +123,13 @@ public class A_QSort {
         Segment(int start, int stop) {
             this.start = start;
             this.stop = stop;
-            //тут вообще-то лучше доделать конструктор на случай если
-            //концы отрезков придут в обратном порядке
         }
 
         @Override
         public int compareTo(Segment o) {
-            //подумайте, что должен возвращать компаратор отрезков
-
-            return 0;
+            if (this.start != o.start)
+                return Integer.compare(this.start, o.start);
+            return Integer.compare(this.stop, o.stop);
         }
     }
-
 }

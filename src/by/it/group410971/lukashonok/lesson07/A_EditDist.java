@@ -1,4 +1,4 @@
-package by.it.a_khmelev.lesson07;
+package by.it.group410971.lukashonok.lesson07;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -38,16 +38,26 @@ import java.util.Scanner;
 
 public class A_EditDist {
 
-
     int getDistanceEdinting(String one, String two) {
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-        int result = 0;
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+        return editDistance(one, two, one.length(), two.length());
     }
 
+    private int editDistance(String s1, String s2, int i, int j) {
+        if (i == 0)
+            return j;
+        if (j == 0)
+            return i;
+
+        if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+            return editDistance(s1, s2, i - 1, j - 1);
+        }
+
+        int insert = editDistance(s1, s2, i, j - 1);
+        int delete = editDistance(s1, s2, i - 1, j);
+        int replace = editDistance(s1, s2, i - 1, j - 1);
+
+        return 1 + Math.min(insert, Math.min(delete, replace));
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
         InputStream stream = A_EditDist.class.getResourceAsStream("dataABC.txt");

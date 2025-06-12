@@ -1,4 +1,4 @@
-package by.it.a_khmelev.lesson08;
+package by.it.group410971.lukashonok.lesson08;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,27 +28,30 @@ Sample Output:
 
 public class B_Knapsack {
 
-    int getMaxWeight(InputStream stream ) {
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
+    int getMaxWeight(InputStream stream) {
         Scanner scanner = new Scanner(stream);
-        int w=scanner.nextInt();
-        int n=scanner.nextInt();
-        int gold[]=new int[n];
+        int w = scanner.nextInt();
+        int n = scanner.nextInt();
+        int[] gold = new int[n];
         for (int i = 0; i < n; i++) {
-            gold[i]=scanner.nextInt();
+            gold[i] = scanner.nextInt();
         }
 
+        int[] dp = new int[w + 1];
 
-        int result = 0;
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+        for (int i = 0; i < n; i++) {
+            for (int x = w; x >= gold[i]; x--) {
+                dp[x] = Math.max(dp[x], dp[x - gold[i]] + gold[i]);
+            }
+        }
+
+        return dp[w];
     }
-
 
     public static void main(String[] args) throws FileNotFoundException {
         InputStream stream = B_Knapsack.class.getResourceAsStream("dataB.txt");
         B_Knapsack instance = new B_Knapsack();
-        int res=instance.getMaxWeight(stream);
+        int res = instance.getMaxWeight(stream);
         System.out.println(res);
     }
 
