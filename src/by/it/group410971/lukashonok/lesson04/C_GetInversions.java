@@ -1,4 +1,4 @@
-package by.it.a_khmelev.lesson04;
+package by.it.group410971.lukashonok.lesson04;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -31,34 +31,58 @@ Sample Output:
 Большой тестовый массив можно прочитать свой или сгенерировать его программно.
 */
 
-
 public class C_GetInversions {
 
     public static void main(String[] args) throws FileNotFoundException {
         InputStream stream = C_GetInversions.class.getResourceAsStream("dataC.txt");
         C_GetInversions instance = new C_GetInversions();
-        //long startTime = System.currentTimeMillis();
+        // long startTime = System.currentTimeMillis();
         int result = instance.calc(stream);
-        //long finishTime = System.currentTimeMillis();
+        // long finishTime = System.currentTimeMillis();
         System.out.print(result);
     }
 
     int calc(InputStream stream) throws FileNotFoundException {
-        //подготовка к чтению данных
         Scanner scanner = new Scanner(stream);
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!
-        //размер массива
         int n = scanner.nextInt();
-        //сам массив
         int[] a = new int[n];
         for (int i = 0; i < n; i++) {
             a[i] = scanner.nextInt();
         }
-        int result = 0;
-        //!!!!!!!!!!!!!!!!!!!!!!!!     тут ваше решение   !!!!!!!!!!!!!!!!!!!!!!!!
+        return mergeSortAndCount(a, 0, n - 1);
+    }
 
+    int mergeSortAndCount(int[] arr, int left, int right) {
+        if (left >= right)
+            return 0;
+        int mid = (left + right) / 2;
+        int count = 0;
+        count += mergeSortAndCount(arr, left, mid);
+        count += mergeSortAndCount(arr, mid + 1, right);
+        count += mergeAndCount(arr, left, mid, right);
+        return count;
+    }
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+    int mergeAndCount(int[] arr, int left, int mid, int right) {
+        int[] temp = new int[right - left + 1];
+        int i = left, j = mid + 1, k = 0;
+        int inversions = 0;
+
+        while (i <= mid && j <= right) {
+            if (arr[i] <= arr[j]) {
+                temp[k++] = arr[i++];
+            } else {
+                temp[k++] = arr[j++];
+                inversions += (mid - i + 1);
+            }
+        }
+        while (i <= mid) {
+            temp[k++] = arr[i++];
+        }
+        while (j <= right) {
+            temp[k++] = arr[j++];
+        }
+        System.arraycopy(temp, 0, arr, left, temp.length);
+        return inversions;
     }
 }

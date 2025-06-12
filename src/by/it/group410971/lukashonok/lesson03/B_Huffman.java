@@ -1,7 +1,9 @@
-package by.it.a_khmelev.lesson03;
+package by.it.group410971.lukashonok.lesson03;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 // Lesson 3. B_Huffman.
@@ -28,7 +30,6 @@ import java.util.Scanner;
 //        Sample Output 1:
 //        a
 
-
 //        Sample Input 2:
 //        4 14
 //        a: 0
@@ -51,17 +52,32 @@ public class B_Huffman {
 
     String decode(InputStream inputStream) throws FileNotFoundException {
         StringBuilder result = new StringBuilder();
-        //прочитаем строку для кодирования из тестового файла
         Scanner scanner = new Scanner(inputStream);
-        Integer count = scanner.nextInt();
-        Integer length = scanner.nextInt();
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! НАЧАЛО ЗАДАЧИ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        //тут запишите ваше решение
 
+        int count = scanner.nextInt();
+        int length = scanner.nextInt();
+        scanner.nextLine();
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! КОНЕЦ ЗАДАЧИ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-        return result.toString(); //01001100100111
+        Map<String, Character> codeToChar = new HashMap<>();
+
+        for (int i = 0; i < count; i++) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(": ");
+            codeToChar.put(parts[1], parts[0].charAt(0));
+        }
+
+        String encoded = scanner.nextLine();
+        StringBuilder current = new StringBuilder();
+
+        for (char bit : encoded.toCharArray()) {
+            current.append(bit);
+            if (codeToChar.containsKey(current.toString())) {
+                result.append(codeToChar.get(current.toString()));
+                current.setLength(0);
+            }
+        }
+
+        return result.toString();
     }
-
 
 }
