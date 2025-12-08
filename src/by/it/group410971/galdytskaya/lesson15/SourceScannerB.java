@@ -31,40 +31,37 @@ public class SourceScannerB {
                             CharBuffer decoded = decoder.decode(ByteBuffer.wrap(bytes));
                             String content = decoded.toString();
 
-                            // Исключаем тестовые файлы
+                            // исключение тестов
                             if (content.contains("@Test") || content.contains("org.junit.Test")) {
                                 return;
                             }
 
-                            // Удаляем package и import строки за один проход
+                            // удаление package и import
                             String withoutPkgImports = removePackageAndImports(content);
 
-                            // Удаляем все комментарии (// и /* */) за один проход
+                            // удаление всех комментарием // и /* */
                             String withoutComments = removeComments(withoutPkgImports);
 
-                            // Обрезаем символы <33 в начале и конце
+                            // обрезка символов <33 в начале и конце
                             String trimmed = trimControlChars(withoutComments);
 
-                            // Удаляем пустые строки
+                            // удаление пустых строк
                             String noEmptyLines = removeEmptyLines(trimmed);
 
-                            // Считаем размер в байтах
                             int size = noEmptyLines.getBytes(StandardCharsets.UTF_8).length;
 
                             Path relative = root.relativize(p);
                             filesData.add(new FileData(relative.toString(), size));
 
                         } catch (MalformedInputException e) {
-                            // игнорируем ошибку и продолжаем
                         } catch (IOException e) {
-                            // игнорируем ошибки чтения
                         }
                     });
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Сортируем по размеру, затем по пути
+        // сортировка по размеру и потом по пути
         filesData.sort(Comparator.comparingInt(FileData::getSize)
                 .thenComparing(FileData::getPath));
 
@@ -93,22 +90,20 @@ public class SourceScannerB {
             if (inBlockComment) {
                 if (i + 1 < length && code.charAt(i) == '*' && code.charAt(i + 1) == '/') {
                     inBlockComment = false;
-                    i++; // пропускаем '/'
+                    i++;
                 }
-                // Внутри блока игнорируем символы
             } else if (inLineComment) {
                 if (code.charAt(i) == '\n' || code.charAt(i) == '\r') {
                     inLineComment = false;
                     result.append(code.charAt(i));
                 }
-                // Внутри строки комментария – игнорируем символы
             } else {
                 if (i + 1 < length && code.charAt(i) == '/' && code.charAt(i + 1) == '*') {
                     inBlockComment = true;
-                    i++; // пропускаем '*'
+                    i++;
                 } else if (i + 1 < length && code.charAt(i) == '/' && code.charAt(i + 1) == '/') {
                     inLineComment = true;
-                    i++; // пропускаем второй '/'
+                    i++;
                 } else {
                     result.append(code.charAt(i));
                 }

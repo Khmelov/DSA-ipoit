@@ -27,10 +27,10 @@ public class MyTreeSet<E extends Comparable<E>> implements Set<E> {
             } else if (cmp > 0) {
                 high = mid - 1;
             } else {
-                return mid; // found
+                return mid;
             }
         }
-        return -(low + 1); // not found, insertion point
+        return -(low + 1);
     }
 
     private void ensureCapacity(int minCapacity) {
@@ -48,7 +48,7 @@ public class MyTreeSet<E extends Comparable<E>> implements Set<E> {
     public boolean add(E e) {
         if (e == null) throw new NullPointerException();
         int idx = binarySearch(e);
-        if (idx >= 0) return false; // duplicate
+        if (idx >= 0) return false;
         int insertPos = -idx - 1;
         ensureCapacity(size + 1);
         System.arraycopy(array, insertPos, array, insertPos + 1, size - insertPos);

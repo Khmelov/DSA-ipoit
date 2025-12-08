@@ -8,7 +8,7 @@ public class GraphA {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine().trim();
 
-        // Парсим граф из строки во множество рёбер
+        // парсим граф из строки во множество рёбер
         Map<String, Set<String>> graph = new HashMap<>();
         Set<String> vertices = new HashSet<>();
 
@@ -23,11 +23,10 @@ public class GraphA {
             vertices.add(from);
             vertices.add(to);
 
-            graph.computeIfAbsent(from, k -> new TreeSet<>()).add(to);
-            // Создаём TreeSet для упорядочивания смежных вершин лексикографически
+            graph.computeIfAbsent(from, k -> new TreeSet<>()).add(to); // создание TreeSet для упорядочивания смежных вершин
         }
 
-        // Построение инцидентности для подсчёта входящих рёбер (in-degree)
+        // построение инцидентности для подсчёта входящих ребер
         Map<String, Integer> inDegree = new HashMap<>();
         for (String v : vertices) {
             inDegree.put(v, 0);
@@ -39,7 +38,7 @@ public class GraphA {
             }
         }
 
-        // Создаём очередь с приоритетом (лексикографический порядок)
+        // создание очереди с приоритетом
         PriorityQueue<String> queue = new PriorityQueue<>();
         for (String v : vertices) {
             if (inDegree.get(v) == 0) {
@@ -63,8 +62,6 @@ public class GraphA {
             }
         }
 
-        // Если топологическая сортировка покрыла все вершины - выводим
-        // Иначе граф содержит цикл
         if (topoOrder.size() == vertices.size()) {
             System.out.println(String.join(" ", topoOrder));
         } else {

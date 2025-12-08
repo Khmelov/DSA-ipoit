@@ -25,7 +25,7 @@ public class SourceScannerA {
                         try {
                             byte[] rawBytes = Files.readAllBytes(p);
 
-                            // Создаем декодер UTF-8 с игнорированием ошибок
+                            // декодер для игнорирования ошибок
                             CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder()
                                     .onMalformedInput(CodingErrorAction.IGNORE)
                                     .onUnmappableCharacter(CodingErrorAction.IGNORE);
@@ -33,38 +33,34 @@ public class SourceScannerA {
                             CharBuffer decoded = decoder.decode(ByteBuffer.wrap(rawBytes));
                             String content = decoded.toString();
 
-                            // Исключаем файлы с тестами
+                            // исключение файлов с тестами
                             if (content.contains("@Test") || content.contains("org.junit.Test")) {
                                 return;
                             }
 
-                            // Удаляем package и import строки
+                            // удаление package и import строки
                             String processed = removePackageAndImports(content);
 
-                            // Удаляем символы с кодом < 33 в начале и конце
+                            // удаление символов с кодом < 33 в начале и конце
                             processed = trimControlChars(processed);
 
-                            // Считаем размер в байтах (UTF-8)
                             int size = processed.getBytes(StandardCharsets.UTF_8).length;
 
                             Path relative = root.relativize(p);
                             processedFiles.add(new FileData(relative.toString(), size));
 
                         } catch (MalformedInputException e) {
-                            // Игнорируем и продолжаем
                         } catch (IOException e) {
-                            // Игнорируем ошибки чтения
                         }
                     });
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Сортируем по размеру и лексикографически по пути
+        // сортировка по размеру и лексикографически по пути
         processedFiles.sort(Comparator.comparingInt(FileData::getSize)
                 .thenComparing(FileData::getPath));
 
-        // Выводим результат
         processedFiles.forEach(fd -> System.out.println(fd.size + " " + fd.path));
     }
 

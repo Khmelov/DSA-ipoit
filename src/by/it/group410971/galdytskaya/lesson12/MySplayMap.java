@@ -330,8 +330,6 @@ public class MySplayMap implements NavigableMap<Integer, String> {
         inorder(node.right, list);
     }
 
-    // Остальные методы не поддерживаются
-
     @Override public Comparator<? super Integer> comparator() { return null; }
     @Override public NavigableSet<Integer> descendingKeySet() { throw new UnsupportedOperationException(); }
     @Override public NavigableMap<Integer, String> descendingMap() { throw new UnsupportedOperationException(); }

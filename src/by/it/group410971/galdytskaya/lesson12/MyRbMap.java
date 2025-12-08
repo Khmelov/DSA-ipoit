@@ -209,7 +209,7 @@ public class MyRbMap implements SortedMap<Integer, String> {
 
     @Override
     public Comparator<? super Integer> comparator() {
-        return null; // natural ordering
+        return null;
     }
 
     @Override
@@ -312,7 +312,6 @@ public class MyRbMap implements SortedMap<Integer, String> {
             put(e.getKey(), e.getValue());
     }
 
-    // Unsupported optional operations
     @Override
     public Set<Integer> keySet() {
         throw new UnsupportedOperationException();

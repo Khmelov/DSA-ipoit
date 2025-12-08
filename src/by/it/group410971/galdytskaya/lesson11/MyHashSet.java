@@ -33,7 +33,6 @@ public class MyHashSet<E> implements Set<E> {
     private int hash(Object o) {
         if (o == null) return 0;
         int h = o.hashCode();
-        // Spread bits (like HashMap's spread)
         return (h) ^ (h >>> 16);
     }
 
@@ -178,7 +177,6 @@ public class MyHashSet<E> implements Set<E> {
         return sb.toString();
     }
 
-    // Unsupported bulk operations for this level
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean changed = false;

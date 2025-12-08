@@ -10,9 +10,9 @@ public class MyLinkedHashSet<E> implements Set<E> {
 
     private static class Node<E> {
         final E value;
-        Node<E> nextInBucket;       // next node in the same hash bucket chain
-        Node<E> prevInsertion;      // previous node in insertion order
-        Node<E> nextInsertion;      // next node in insertion order
+        Node<E> nextInBucket;
+        Node<E> prevInsertion;
+        Node<E> nextInsertion;
 
         Node(E value) {
             this.value = value;
@@ -26,7 +26,6 @@ public class MyLinkedHashSet<E> implements Set<E> {
     private int size;
     private int threshold;
 
-    // Head and tail of doubly linked list maintaining insertion order
     private Node<E> headInsertion;
     private Node<E> tailInsertion;
 
@@ -56,11 +55,11 @@ public class MyLinkedHashSet<E> implements Set<E> {
         }
         int idx = indexFor(hash(e), table.length);
         Node<E> newNode = new Node<>(e);
-        // Insert at bucket head
+
         newNode.nextInBucket = table[idx];
         table[idx] = newNode;
 
-        // Append to insertion order list
+
         if (tailInsertion == null) {
             headInsertion = tailInsertion = newNode;
         } else {
@@ -106,14 +105,14 @@ public class MyLinkedHashSet<E> implements Set<E> {
         Node<E> node = table[idx];
         while (node != null) {
             if ((o == null && node.value == null) || (o != null && o.equals(node.value))) {
-                // Remove from bucket chain
+
                 if (prevBucket == null) {
                     table[idx] = node.nextInBucket;
                 } else {
                     prevBucket.nextInBucket = node.nextInBucket;
                 }
 
-                // Remove from insertion order doubly linked list
+
                 if (node.prevInsertion != null) {
                     node.prevInsertion.nextInsertion = node.nextInsertion;
                 } else {
@@ -198,7 +197,7 @@ public class MyLinkedHashSet<E> implements Set<E> {
         return sb.toString();
     }
 
-    // Additional bulk methods for level B
+
 
     @Override
     public boolean containsAll(Collection<?> c) {

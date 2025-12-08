@@ -108,7 +108,6 @@ public class MyAvlMap implements Map<Integer, String> {
         } else if (cmp > 0) {
             node.right = remove(node.right, key, oldValue, removed);
         } else {
-            // Found key to remove
             removed.value = true;
             oldValue.value = node.value;
             size--;
@@ -225,7 +224,6 @@ public class MyAvlMap implements Map<Integer, String> {
         return size == 0;
     }
 
-    // Unsupported optional methods for this assignment level
     @Override public void putAll(Map<? extends Integer, ? extends String> m) { for (Entry<? extends Integer, ? extends String> e : m.entrySet()) put(e.getKey(), e.getValue());}
     @Override public boolean containsValue(Object value) { throw new UnsupportedOperationException();}
     @Override public Set<Integer> keySet() { throw new UnsupportedOperationException();}

@@ -24,7 +24,6 @@ public class GraphB {
             graph.computeIfAbsent(from, k -> new HashSet<>()).add(to);
         }
 
-        // Проверка на циклы с помощью DFS
         boolean hasCycle = false;
         Set<String> visited = new HashSet<>();
         Set<String> inStack = new HashSet<>();

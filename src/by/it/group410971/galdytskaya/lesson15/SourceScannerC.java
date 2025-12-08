@@ -13,7 +13,6 @@ public class SourceScannerC {
         String src = System.getProperty("user.dir") + File.separator + "src" + File.separator;
         Path root = Path.of(src);
 
-        // Считать и очистить файлы
         Map<String, String> fileToText = new TreeMap<>();
 
         try (var walk = Files.walk(root)) {
@@ -21,7 +20,7 @@ public class SourceScannerC {
                 try {
                     String content = Files.readString(p);
                     if (content.contains("@Test") || content.contains("org.junit.Test")) {
-                        return; // Пропускаем тестовые файлы
+                        return;
                     }
                     String cleaned = cleanSource(content);
                     if (!cleaned.isEmpty()) {
@@ -36,12 +35,10 @@ public class SourceScannerC {
             });
         }
 
-        // Найти копии по расстоянию Левенштейна < 10
         Map<String, List<String>> copiesMap = findCopies(fileToText, 10);
 
         Set<String> filesWithCopies = copiesMap.keySet();
 
-        // Вывести все файлы с копиями
         filesWithCopies.stream()
                 .sorted()
                 .forEach(file -> {
@@ -50,14 +47,12 @@ public class SourceScannerC {
                     copies.stream().sorted().forEach(System.out::println);
                 });
 
-        // Вывести файлы без копий (например FiboA.java), чтобы не пропустить их
         fileToText.keySet().stream()
                 .filter(file -> !filesWithCopies.contains(file))
                 .sorted()
                 .forEach(System.out::println);
     }
 
-    // Очистка исходного текста: удалить package, import, комментарии, заменить код <33 на пробел, trim
     private static String cleanSource(String text) {
         StringBuilder sb = new StringBuilder();
         String[] lines = text.split("\n");
@@ -72,7 +67,6 @@ public class SourceScannerC {
         String withoutPkgImp = sb.toString();
         String noComments = removeComments(withoutPkgImp);
 
-        // Заменить все символы с кодом <33 на пробел (32)
         String replaced = noComments.chars()
                 .map(c -> c < 33 ? 32 : c)
                 .collect(StringBuilder::new,
@@ -83,7 +77,6 @@ public class SourceScannerC {
         return replaced.trim();
     }
 
-    // Удаление однострочных (//) и многострочных (/* ... */) комментариев за O(n)
     private static String removeComments(String src) {
         StringBuilder sb = new StringBuilder();
         int length = src.length();
@@ -94,13 +87,11 @@ public class SourceScannerC {
                 if (i + 1 < length) {
                     char c2 = src.charAt(i + 1);
                     if (c2 == '/') {
-                        // Однострочный комментарий
                         i += 2;
                         while (i < length && src.charAt(i) != '\n') i++;
                         continue;
                     }
                     if (c2 == '*') {
-                        // Многострочный комментарий
                         i += 2;
                         while (i + 1 < length && !(src.charAt(i) == '*' && src.charAt(i + 1) == '/')) {
                             i++;
@@ -116,7 +107,6 @@ public class SourceScannerC {
         return sb.toString();
     }
 
-    // Поиск копий среди файлов по расстоянию Левенштейна < threshold
     private static Map<String, List<String>> findCopies(Map<String, String> fileToText, int threshold) {
         Map<String, List<String>> result = new TreeMap<>();
         List<String> files = new ArrayList<>(fileToText.keySet());
@@ -144,7 +134,6 @@ public class SourceScannerC {
         return result;
     }
 
-    // Оптимизированный расчёт расстояния Левенштейна с порогом threshold
     private static int levenshteinDistance(String s1, String s2, int threshold) {
         int len1 = s1.length();
         int len2 = s2.length();

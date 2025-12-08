@@ -49,7 +49,7 @@ public class SitesB {
         int idCounter = 0;
         List<String[]> pairs = new ArrayList<>();
 
-        // Первый проход: собираем все сайты и пары
+        // собираю все сайты и пары
         while (sc.hasNextLine()) {
             String line = sc.nextLine().trim();
             if ("end".equals(line)) {
@@ -65,10 +65,10 @@ public class SitesB {
             }
         }
 
-        // Создаем DSU
+        // создаю DSU
         DSU dsu = new DSU(idCounter);
 
-        // Второй проход: объединяем пары
+        // объединяю пары
         for (String[] pair : pairs) {
             String site1 = pair[0].trim();
             String site2 = pair[1].trim();
@@ -77,19 +77,17 @@ public class SitesB {
             dsu.union(id1, id2);
         }
 
-        // Собираем размеры кластеров из DSU.size (только корни)
+        // собираю размеры кластеров из DSU.size
         int[] sizes = new int[idCounter];
         int sizeCount = 0;
         for (int i = 0; i < idCounter; i++) {
-            if (dsu.find(i) == i) { // только корни компонент
+            if (dsu.find(i) == i) { // только корни
                 sizes[sizeCount++] = dsu.size[i];
             }
         }
 
-        // Быстрая сортировка ПО УБЫВАНИЮ
         quickSortDesc(sizes, 0, sizeCount - 1);
 
-        // Вывод
         for (int i = 0; i < sizeCount; i++) {
             if (i > 0) System.out.print(" ");
             System.out.print(sizes[i]);
@@ -97,7 +95,6 @@ public class SitesB {
         System.out.println();
     }
 
-    // Быстрая сортировка ПО УБЫВАНИЮ
     private static void quickSortDesc(int[] arr, int low, int high) {
         if (low < high) {
             int pi = partitionDesc(arr, low, high);
@@ -110,7 +107,7 @@ public class SitesB {
         int pivot = arr[high];
         int i = low - 1;
         for (int j = low; j < high; j++) {
-            if (arr[j] >= pivot) { // >= для сортировки по убыванию
+            if (arr[j] >= pivot) {
                 i++;
                 int temp = arr[i];
                 arr[i] = arr[j];

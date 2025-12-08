@@ -251,7 +251,6 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
             throw new NullPointerException();
         }
 
-        // Filter only elements contained in c
         int newSize = 0;
         for (int i = 0; i < size; i++) {
             if (c.contains(heap[i])) {
@@ -259,7 +258,6 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
             }
         }
 
-        // Null out removed elements
         for (int i = newSize; i < size; i++) {
             heap[i] = null;
         }
@@ -267,7 +265,6 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
         boolean changed = size != newSize;
         size = newSize;
 
-        // Re-build heap from bottom up to restore heap invariant
         for (int i = (size / 2) - 1; i >= 0; i--) {
             siftDown(i);
         }
