@@ -40,7 +40,7 @@ public class Test_Part2_Lesson11Test extends HomeWork {
                 add(Object)
                 remove(Object)
                 contains(Object)
-
+                
                 """.split("\\s+");
         eObject = new HashSet<>();
         randomCheck("MyHashSet", methods);
@@ -56,7 +56,7 @@ public class Test_Part2_Lesson11Test extends HomeWork {
                 add(Object)
                 remove(Object)
                 contains(Object)
-                                
+                
                 containsAll(Collection)
                 addAll(Collection)
                 removeAll(Collection)
@@ -76,7 +76,7 @@ public class Test_Part2_Lesson11Test extends HomeWork {
                 add(Object)
                 remove(Object)
                 contains(Object)
-                                
+                
                 containsAll(Collection)
                 addAll(Collection)
                 removeAll(Collection)
@@ -133,8 +133,8 @@ public class Test_Part2_Lesson11Test extends HomeWork {
             int eChecksum = checkSum(eString);
             int aChecksum = checkSum(aString);
             assertEquals(("Erros state\n" +
-                          "expectred check sum=%d for %s\n" +
-                          "   actual check sum=%d for %s\n")
+                    "expectred check sum=%d for %s\n" +
+                    "   actual check sum=%d for %s\n")
                     .formatted(eChecksum, eString, aChecksum, aString), eChecksum, aChecksum);
         }
         System.out.println("=".repeat(100) + "\nCOMPLETE: " + methodNames);
@@ -212,8 +212,8 @@ public class Test_Part2_Lesson11Test extends HomeWork {
 
     private boolean notComparable(Method m) {
         return m.getReturnType() != Comparable.class &&
-               Arrays.stream(m.getParameterTypes())
-                       .noneMatch(p -> p == Comparable.class);
+                Arrays.stream(m.getParameterTypes())
+                        .noneMatch(p -> p == Comparable.class);
     }
 
     private String getSignature(Method method) {

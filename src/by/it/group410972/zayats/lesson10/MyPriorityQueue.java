@@ -27,7 +27,7 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
         }
     }
 
-    private void heapifyUp() {
+    private void beautifyUp() {
         int index = size - 1;
         while (index > 0) {
             int parent = (index - 1) / 2;
@@ -40,11 +40,11 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
         }
     }
 
-    private void heapifyDown() {
-        heapifyDownFrom(0);
+    private void beautifyDown() {
+        beautifyDownFrom(0);
     }
 
-    private void heapifyDownFrom(int index) {
+    private void beautifyDownFrom(int index) {
         while (index < size) {
             int left = 2 * index + 1;
             int right = 2 * index + 2;
@@ -68,7 +68,7 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
                 heap[i] = heap[size - 1];
                 heap[size - 1] = null;
                 size--;
-                heapifyDownFrom(i);
+                beautifyDownFrom(i);
                 break;
             }
         }
@@ -80,7 +80,7 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
         if (element == null) throw new NullPointerException();
         ensureCapacity();
         heap[size++] = element;
-        heapifyUp();
+        beautifyUp();
         return true;
     }
 
@@ -96,7 +96,7 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
         heap[0] = heap[size - 1];
         heap[size - 1] = null;
         size--;
-        heapifyDown();
+        beautifyDown();
         return result;
     }
 
@@ -166,26 +166,52 @@ public class MyPriorityQueue<E extends Comparable<E>> implements Queue<E> {
     @Override
     public boolean removeAll(Collection<?> c) {
         boolean modified = false;
-        MyPriorityQueue<E> newHeap = new MyPriorityQueue<>();
-        for (int i = 0; i < size; i++) {
-            if (!c.contains(heap[i])) newHeap.add(heap[i]);
-            else modified = true;
+        int writeIndex = 0;
+
+        for (int readIndex = 0; readIndex < size; readIndex++) {
+            if (!c.contains(heap[readIndex])) {
+                heap[writeIndex++] = heap[readIndex];
+            } else modified = true;
         }
-        this.heap = newHeap.heap;
-        this.size = newHeap.size;
+
+        // очистка хвостовой части массива
+        for (int i = writeIndex; i < size; i++) {
+            heap[i] = null;
+        }
+
+        size = writeIndex;
+
+        // восстановление свойств кучи
+        for (int i = size / 2 - 1; i >= 0; i--) {
+            beautifyDownFrom(i);
+        }
+
         return modified;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
         boolean modified = false;
-        MyPriorityQueue<E> newHeap = new MyPriorityQueue<>();
-        for (int i = 0; i < size; i++) {
-            if (c.contains(heap[i])) newHeap.add(heap[i]);
-            else modified = true;
+        int writeIndex = 0;
+
+        for (int readIndex = 0; readIndex < size; readIndex++) {
+            if (c.contains(heap[readIndex])) {
+                heap[writeIndex++] = heap[readIndex];
+            } else modified = true;
         }
-        this.heap = newHeap.heap;
-        this.size = newHeap.size;
+
+        // очистка хвостовой части массива
+        for (int i = writeIndex; i < size; i++) {
+            heap[i] = null;
+        }
+
+        size = writeIndex;
+
+        // восстановление свойств кучи
+        for (int i = size / 2 - 1; i >= 0; i--) {
+            beautifyDownFrom(i);
+        }
+
         return modified;
     }
 
